@@ -1,0 +1,117 @@
+@startuml
+class com.masanz.da.spc.database.ConnectionManager {
+- {static} Connection conexion
++ {static} boolean conectar(String,String,String)
++ {static} Object[][] ejecutarSelectSQL(String,Object[])
++ {static} int ejecutarUpdateSQL(String,Object[])
++ {static} long ejecutarInsertSQL(String,Object[])
+- {static} Object[][] convertirResultSets(ResultSet)
+- {static} void establecerParametros(PreparedStatement,Object[])
++ {static} boolean desconectar()
+}
+
+
+class com.masanz.da.spc.dao.NotaDaoMap {
+- {static} int NUMERO_NOTAS
+- {static} Map<Long,Nota> mapaNotas
++ int obtenerNumeroNotas()
++ List<Nota> obtenerNotas(int,int)
++ Nota obtenerNota(long)
++ Nota guardarNota(Nota)
++ boolean actualizarNota(Nota)
++ boolean eliminarNota(long)
+}
+
+
+interface com.masanz.da.spc.dao.INotaDao {
+~ int obtenerNumeroNotas()
+~ List<Nota> obtenerNotas(int,int)
+~ Nota obtenerNota(long)
+~ Nota guardarNota(Nota)
+~ boolean actualizarNota(Nota)
+~ boolean eliminarNota(long)
+}
+
+class com.masanz.da.spc.dto.Nota {
+- Long id
+- String titulo
+- String contenido
+- LocalDateTime creado
+- LocalDateTime modificado
++ <<Create>> Nota()
++ <<Create>> Nota(Long)
++ <<Create>> Nota(Long,String,String)
++ <<Create>> Nota(String,String)
++ <<Create>> Nota(Long,String,String,LocalDateTime,LocalDateTime)
++ Long getId()
++ void setId(Long)
++ String getTitulo()
++ void setTitulo(String)
++ String getContenido()
++ void setContenido(String)
++ String getCreado()
++ void setCreado(LocalDateTime)
++ void setCreado(String)
++ String getModificado()
++ void setModificado(LocalDateTime)
++ void setModificado(String)
+}
+
+
+class com.masanz.da.spc.dao.NotaDaoDb {
++ <<Create>> NotaDaoDb()
++ int obtenerNumeroNotas()
++ List<Nota> obtenerNotas(int,int)
++ Nota obtenerNota(long)
++ Nota guardarNota(Nota)
++ boolean actualizarNota(Nota)
++ boolean eliminarNota(long)
+}
+
+class com.masanz.da.spc.service.NotaService {
+- INotaDao notaDao
++ <<Create>> NotaService()
++ int obtenerNumeroNotas()
++ List<Nota> obtenerNotas(int,int)
++ Nota obtenerNota(long)
++ Nota guardarNota(Nota)
++ boolean actualizarNota(Nota)
++ boolean eliminarNota(int)
+}
+
+
+class com.masanz.da.spc.Main {
+- {static} Logger logger
++ {static} void main(String[])
+}
+
+
+class com.masanz.da.spc.controller.NotaController {
+- {static} int NOTAS_POR_PAGINA
+- {static} NotaService notaService
++ {static} ModelAndView servirIndice(Request,Response)
++ {static} ModelAndView servirLista(Request,Response)
++ {static} ModelAndView servirNota(Request,Response)
++ {static} ModelAndView servirCrearNota(Request,Response)
++ {static} ModelAndView crearNota(Request,Response)
++ {static} ModelAndView servirEditarNota(Request,Response)
++ {static} ModelAndView editarNota(Request,Response)
++ {static} ModelAndView servirEliminarNota(Request,Response)
++ {static} ModelAndView eliminarNota(Request,Response)
++ {static} ModelAndView servirError(Request,Response)
+}
+
+
+
+
+com.masanz.da.spc.dao.INotaDao <|.. com.masanz.da.spc.dao.NotaDaoMap
+com.masanz.da.spc.dao.INotaDao <|.. com.masanz.da.spc.dao.NotaDaoDb
+
+Main ..> NotaController
+NotaController --> NotaService
+NotaController ..> Nota
+NotaService --> INotaDao
+NotaDaoDb ..> ConnectionManager
+NotaService ..> Nota
+INotaDao ..> Nota
+@enduml
